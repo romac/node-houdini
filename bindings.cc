@@ -27,30 +27,44 @@ using namespace node;
         return scope.Close( Undefined() ); \
     } \
     \
-    v8::String::Utf8Value string( args[ 0 ]->ToString() ); \
-    int length = string.length(); \
-    uint8_t *value = reinterpret_cast<uint8_t *>( *string ); \
+    Local<String> string = args[ 0 ]->ToString(); \
+    v8::String::Utf8Value utf8string( string ); \
+    int length = utf8string.length(); \
+    uint8_t *value = reinterpret_cast<uint8_t *>( *utf8string ); \
     \
     gh_buf buffer = GH_BUF_INIT;
 
 #define HOUDINI_FUNCTION_FOOTER() \
-    Local<String> escaped = String::New( buffer.ptr ); \
-    return scope.Close( escaped ); \
 }
 
 #define HOUDINI_ESCAPE_FUNCTION( name ) \
     HOUDINI_FUNCTION_HEADER( escape_##name ) \
-    CONCAT( houdini_escape_, name )( &buffer, value, length ); \
-    HOUDINI_FUNCTION_FOOTER()
+    if( CONCAT( houdini_escape_, name )( &buffer, value, length ) ) \
+    { \
+        Local<String> escaped = String::New( buffer.ptr ); \
+        return scope.Close( escaped ); \
+    } \
+    return scope.Close( string ); \
+HOUDINI_FUNCTION_FOOTER()
 
 #define HOUDINI_UNESCAPE_FUNCTION( name ) \
     HOUDINI_FUNCTION_HEADER( unescape_##name ) \
-    CONCAT( houdini_unescape_, name )( &buffer, value, length ); \
-    HOUDINI_FUNCTION_FOOTER()
+    if( CONCAT( houdini_unescape_, name )( &buffer, value, length ) ) \
+    { \
+        Local<String> escaped = String::New( buffer.ptr ); \
+        return scope.Close( escaped ); \
+    } \
+    return scope.Close( string ); \
+HOUDINI_FUNCTION_FOOTER()
 
 HOUDINI_FUNCTION_HEADER( escape_html0 )
     int secure = args.Length() > 1 ? ( int )args[ 1 ]->ToBoolean()->Value() : 1; \
-    houdini_escape_html0( &buffer, value, length, secure );
+    if( houdini_escape_html0( &buffer, value, length, secure ) ) \
+    { \
+        Local<String> escaped = String::New( buffer.ptr ); \
+        return scope.Close( escaped ); \
+    } \
+    return scope.Close( string ); \
 HOUDINI_FUNCTION_FOOTER()
 
 HOUDINI_UNESCAPE_FUNCTION( html )
