@@ -3,6 +3,8 @@
 
 > Node.js bindings for [Houdini](https://github.com/zacharyvoase/houdini), a text escaping library by GitHub.
 
+**Bundled Houdini version:** e6f0ec96b85578a2fd8ab79af84493cad3a84cfb
+
 From [Houdini's README](https://github.com/zacharyvoase/houdini/blob/master/README.md):
 
 Houdini is a simple API for escaping text for the web. And unescaping it. But that kind of breaks the joke in the name so nevermind.
