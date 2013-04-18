@@ -36,8 +36,7 @@ This module follows [Semver](http://semver.org).
 
 ## Usage
 
-I'm not really happy with the current API, and I'm therefore open to suggestions.  
-Feel free to touch me a word about it in [the issues](https://github.com/romac/node-houdini/issues).
+> I'm not really happy with the current API, and am therefore [open to suggestions](https://github.com/romac/node-houdini/issues).  
 
 ```js
 var houdini = require('houdini'),
