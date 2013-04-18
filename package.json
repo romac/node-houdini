@@ -20,6 +20,7 @@
     "bindings": "~1.1.0"
   },
   "scripts": {
+    "install": "node-gyp configure build || (exit 0)",
     "prepublish": "npm prune"
   }
 }
