@@ -30,7 +30,8 @@ Houdini is a simple API for escaping text for the web. And unescaping it. But th
 This module follows [Semver](http://semver.org).
 
 ## Installation
-
+    
+    $ npm install -g node-gyp
     $ npm install houdini
 
 ## Usage
