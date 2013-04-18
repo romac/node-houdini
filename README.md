@@ -28,6 +28,9 @@ Houdini is a simple API for escaping text for the web. And unescaping it. But th
 
 ## Usage
 
+I'm not really happy with the current API, and I'm therefore open to suggestions.  
+Feel free to touch me a word about it in [the issues](https://github.com/romac/node-houdini/issues).
+
 ```js
 var houdini = require('houdini'),
     escaped;
@@ -51,4 +54,4 @@ houdini.unescapeJS( str ) === str;
 
 ## License
 
-node-houdini is released under the [MIT license])(http://romac.mit-license.org).
+node-houdini is released under the [MIT license](http://romac.mit-license.org).
