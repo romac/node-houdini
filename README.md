@@ -22,6 +22,13 @@ Houdini is a simple API for escaping text for the web. And unescaping it. But th
 
 - URL escaping and unescaping is the same as generic URIs, but spaces are changed to `+`.
 
+## Warning
+
+1. This is my first Node.js addon and C++ isn't my mother tongue.
+2. It is still in version 0.1.0, do not rely too much on it for production purpose, and be aware that the API might change at any time.
+
+This module follows [Semver](http://semver.org).
+
 ## Installation
 
     $ npm install houdini
