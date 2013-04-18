@@ -1,0 +1,25 @@
+{
+  "name": "houdini",
+  "version": "0.1.0",
+  "description": "Node.js bindings for Houdini, a text escaping library by GitHub.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/romac/node-houdini"
+  },
+  "keywords": [
+    "houdini",
+    "escaping",
+    "text",
+    "html"
+  ],
+  "author": "Romain Ruetschi (romain.ruetschi@gmail.com)",
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "dependencies": {
+    "bindings": "~1.1.0"
+  },
+  "scripts": {
+    "prepublish": "npm prune"
+  }
+}
