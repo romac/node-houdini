@@ -3,7 +3,7 @@
 
 > Node.js bindings for [Houdini](https://github.com/zacharyvoase/houdini), a text escaping library by GitHub.
 
-**Bundled Houdini version:** e6f0ec96b85578a2fd8ab79af84493cad3a84cfb
+**Bundled Houdini version:** [e6f0ec96b85578a2fd8ab79af84493cad3a84cfb](https://github.com/vmg/houdini/commit/e6f0ec96b85578a2fd8ab79af84493cad3a84cfb)
 
 From [Houdini's README](https://github.com/zacharyvoase/houdini/blob/master/README.md):
 
