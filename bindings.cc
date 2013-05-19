@@ -8,11 +8,11 @@
 using namespace v8;
 using namespace node;
 
-#define CONCAT( x, y ) x##y
-#define CPP_FUNCTION_NAME( name ) CONCAT( Houdini_, name )
+namespace houdini
+{
 
 #define HOUDINI_FUNCTION_HEADER( name ) \
-    Handle<Value> CPP_FUNCTION_NAME(name)( const Arguments &args ) { \
+    Handle<Value> name( const Arguments &args ) { \
     HandleScope scope; \
     \
     if( args.Length() < 1 ) \
@@ -28,72 +28,62 @@ using namespace node;
     } \
     \
     Local<String> string = args[ 0 ]->ToString(); \
-    v8::String::Utf8Value utf8string( string ); \
-    int length = utf8string.length(); \
-    uint8_t *value = reinterpret_cast<uint8_t *>( *utf8string ); \
+    v8::String::Utf8Value input( string ); \
     \
     gh_buf buffer = GH_BUF_INIT;
 
 #define HOUDINI_FUNCTION_FOOTER() \
 }
 
-#define HOUDINI_ESCAPE_FUNCTION( name ) \
-    HOUDINI_FUNCTION_HEADER( escape_##name ) \
-    if( CONCAT( houdini_escape_, name )( &buffer, value, length ) ) \
+#define HOUDINI_FUNCTION( name ) \
+    HOUDINI_FUNCTION_HEADER( name ) \
+    if( houdini_##name( &buffer, ( const unsigned char * )( *input ), input.length() ) ) \
     { \
-        Local<String> escaped = String::New( buffer.ptr ); \
-        return scope.Close( escaped ); \
+        return scope.Close( String::New( buffer.ptr ) ); \
     } \
+    \
     return scope.Close( string ); \
-HOUDINI_FUNCTION_FOOTER()
+    HOUDINI_FUNCTION_FOOTER()
 
-#define HOUDINI_UNESCAPE_FUNCTION( name ) \
-    HOUDINI_FUNCTION_HEADER( unescape_##name ) \
-    if( CONCAT( houdini_unescape_, name )( &buffer, value, length ) ) \
-    { \
-        Local<String> escaped = String::New( buffer.ptr ); \
-        return scope.Close( escaped ); \
-    } \
-    return scope.Close( string ); \
-HOUDINI_FUNCTION_FOOTER()
 
 HOUDINI_FUNCTION_HEADER( escape_html0 )
-    int secure = args.Length() > 1 ? ( int )args[ 1 ]->ToBoolean()->Value() : 1; \
-    if( houdini_escape_html0( &buffer, value, length, secure ) ) \
-    { \
-        Local<String> escaped = String::New( buffer.ptr ); \
-        return scope.Close( escaped ); \
-    } \
-    return scope.Close( string ); \
+    int secure = args.Length() > 1 ? ( int )args[ 1 ]->ToBoolean()->Value() : 1;
+    if( houdini_escape_html0( &buffer, ( const unsigned char * )( *input ), input.length(), secure ) ) \
+    {
+        return scope.Close( String::New( buffer.ptr ) );
+    }
+    return scope.Close( string );
 HOUDINI_FUNCTION_FOOTER()
 
-HOUDINI_UNESCAPE_FUNCTION( html )
+HOUDINI_FUNCTION( unescape_html )
 
-HOUDINI_ESCAPE_FUNCTION( xml )
+HOUDINI_FUNCTION( escape_xml )
 
-HOUDINI_ESCAPE_FUNCTION( uri )
-HOUDINI_UNESCAPE_FUNCTION( uri )
+HOUDINI_FUNCTION( escape_uri )
+HOUDINI_FUNCTION( unescape_uri )
 
-HOUDINI_ESCAPE_FUNCTION( url )
-HOUDINI_UNESCAPE_FUNCTION( url )
+HOUDINI_FUNCTION( escape_url )
+HOUDINI_FUNCTION( unescape_url )
 
-HOUDINI_ESCAPE_FUNCTION( href )
+HOUDINI_FUNCTION( escape_href )
 
-HOUDINI_ESCAPE_FUNCTION( js )
-HOUDINI_UNESCAPE_FUNCTION( js )
+HOUDINI_FUNCTION( escape_js )
+HOUDINI_FUNCTION( unescape_js )
 
 extern "C" void init( Handle<Object> exports )
 {
-    NODE_SET_METHOD( exports, "escapeHTML", CPP_FUNCTION_NAME( escape_html0 ) );
-    NODE_SET_METHOD( exports, "unescapeHTML", CPP_FUNCTION_NAME( unescape_html ) );
-    NODE_SET_METHOD( exports, "escapeXML", CPP_FUNCTION_NAME( escape_xml ) );
-    NODE_SET_METHOD( exports, "escapeURI", CPP_FUNCTION_NAME( escape_uri ) );
-    NODE_SET_METHOD( exports, "unescapeURI", CPP_FUNCTION_NAME( unescape_uri ) );
-    NODE_SET_METHOD( exports, "escapeURL", CPP_FUNCTION_NAME( escape_url ) );
-    NODE_SET_METHOD( exports, "unescapeURL", CPP_FUNCTION_NAME( unescape_url ) );
-    NODE_SET_METHOD( exports, "escapeHREF", CPP_FUNCTION_NAME( escape_href ) );
-    NODE_SET_METHOD( exports, "escapeJS", CPP_FUNCTION_NAME( escape_js ) );
-    NODE_SET_METHOD( exports, "unescapeJS", CPP_FUNCTION_NAME( unescape_js ) );
+    NODE_SET_METHOD( exports, "escapeHTML", escape_html0 );
+    NODE_SET_METHOD( exports, "unescapeHTML", unescape_html );
+    NODE_SET_METHOD( exports, "escapeXML", escape_xml );
+    NODE_SET_METHOD( exports, "escapeURI", escape_uri );
+    NODE_SET_METHOD( exports, "unescapeURI", unescape_uri );
+    NODE_SET_METHOD( exports, "escapeURL", escape_url );
+    NODE_SET_METHOD( exports, "unescapeURL", unescape_url );
+    NODE_SET_METHOD( exports, "escapeHREF", escape_href );
+    NODE_SET_METHOD( exports, "escapeJS", escape_js );
+    NODE_SET_METHOD( exports, "unescapeJS", unescape_js );
 }
 
 NODE_MODULE( houdini, init )
+
+}
